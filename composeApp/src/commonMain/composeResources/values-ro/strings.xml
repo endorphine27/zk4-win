@@ -315,6 +315,7 @@
     <string name="compose_action_pause">Pauză</string>
     <string name="compose_action_reload">Reîncarcă</string>
     <string name="compose_auth_already_have_account">Ai deja un cont? </string>
+    <string name="compose_auth_forgot_password">Ai uitat parola?</string>
     <string name="compose_auth_continue_without_account">Continuă fără cont</string>
     <string name="compose_auth_create_account">Creează cont</string>
     <string name="compose_auth_dont_have_account">Nu ai un cont? </string>

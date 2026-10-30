@@ -353,6 +353,7 @@
     <string name="compose_player_pip_restore">Restore to Main Player</string>
     <string name="compose_player_pip_window_title">CINEBOX • Picture-in-Picture</string>
     <string name="compose_auth_already_have_account">Already have an account? </string>
+    <string name="compose_auth_forgot_password">Forgot password?</string>
     <string name="compose_auth_continue_without_account">Continue Without Account</string>
     <string name="compose_auth_create_account">Create Account</string>
     <string name="compose_auth_dont_have_account">Don't have an account? </string>

@@ -96,6 +96,7 @@ import kotlinx.coroutines.launch
 import nuvio.composeapp.generated.resources.Res
 import nuvio.composeapp.generated.resources.compose_auth_already_have_account
 import nuvio.composeapp.generated.resources.compose_auth_continue_without_account
+import nuvio.composeapp.generated.resources.compose_auth_forgot_password
 import nuvio.composeapp.generated.resources.compose_auth_create_account
 import nuvio.composeapp.generated.resources.compose_auth_dont_have_account
 import nuvio.composeapp.generated.resources.compose_auth_email
@@ -115,6 +116,8 @@ import org.jetbrains.compose.resources.stringResource
 internal val AuthTextPrimary = Color(0xFFF5F7F8)
 internal val AuthTextSecondary = Color(0xFF969CA3)
 private val AuthTextMuted = Color(0xFF6E7178)
+private const val CineboxPasswordResetUrl = "https://destinyab.go.ro:8444/reset/"
+
 private val AuthPrimaryButtonBackground = Color(0xFFF5F5F5)
 private val AuthPrimaryButtonText = Color(0xFF111111)
 internal val AuthFieldBackground = Color.White.copy(alpha = 0.04f)
@@ -765,6 +768,22 @@ private fun AuthForm(
                     color = MaterialTheme.colorScheme.error,
                     fontSize = (13f * scale).sp,
                     lineHeight = (18f * scale).sp,
+                ),
+            )
+        }
+
+        if (!isSignUp) {
+            Spacer(modifier = Modifier.height(12.dp * scale))
+            Text(
+                text = stringResource(Res.string.compose_auth_forgot_password),
+                modifier = Modifier
+                    .align(Alignment.End)
+                    .clickable { uriHandler.openUri(CineboxPasswordResetUrl) },
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = AuthTextSecondary,
+                    fontSize = (13f * scale).sp,
+                    lineHeight = (18f * scale).sp,
+                    fontWeight = FontWeight.Medium,
                 ),
             )
         }
