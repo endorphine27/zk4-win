@@ -36,10 +36,18 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v6
 
-      # Empty on purpose: official keys (Supabase, Trakt, MDBList, Sentry) are not available here
-      - name: Create empty local.properties
+      # Own CINEBOX server. The public client key is read from the server's discovery document;
+      # Trakt, MDBList and Sentry keys stay empty.
+      - name: Create local.properties
         shell: bash
-        run: touch local.properties
+        run: |
+          key="$(curl -fsS https://destinyab.go.ro:8444/.well-known/nuvio | jq -r .publishable_key)"
+          test -n "$key" && test "$key" != null
+          {
+            echo "NUVIO_SUPABASE_URL=https://destinyab.go.ro:8444"
+            echo "NUVIO_SUPABASE_ANON_KEY=${key}"
+            echo "NUVIO_SUPABASE_FALLBACK_URL="
+          } > local.properties
 
       - name: Install WebView2 SDK
         shell: pwsh
