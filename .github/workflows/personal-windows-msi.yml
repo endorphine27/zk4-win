@@ -59,11 +59,20 @@ jobs:
       - name: Build unsigned MSI
         shell: pwsh
         run: |
-          & .\gradlew.bat :composeApp:packageReleaseMsi `
+          & .\gradlew.bat :composeApp:createReleaseDistributable :composeApp:packageReleaseMsi `
             "-Pnuvio.webview2.dir=$env:WEBVIEW2_ROOT" `
             "-Pnuvio.desktop.versionName=$env:APP_VERSION" `
             "-Pcompose.desktop.packaging.checkJdkVendor=false" `
             --no-configuration-cache --no-daemon --stacktrace
+
+      # Portable copy: unzip and run CINEBOX.exe, no installer needed
+      - name: Zip portable app
+        shell: pwsh
+        run: |
+          $dir = Get-ChildItem -Path composeApp\build\compose\binaries -Directory -Recurse -Filter CINEBOX | Where-Object { Test-Path (Join-Path $_.FullName "CINEBOX.exe") } | Select-Object -First 1
+          if (-not $dir) { throw "Portable app folder not found" }
+          Compress-Archive -Path $dir.FullName -DestinationPath "Cinebox-Windows-x64-portable.zip"
+          Get-Item Cinebox-Windows-x64-portable.zip | Format-List Name, Length
 
       - name: Publish MSI to a release
         shell: bash
@@ -73,4 +82,4 @@ jobs:
           msi="$(find composeApp/build -name "Cinebox-Windows-*.msi" | head -n 1)"
           test -f "$msi"
           ls -lh "$msi"
-          gh release create "v${APP_VERSION}-win" "$msi" --title "Windows build ${GITHUB_RUN_NUMBER}" --notes "Unsigned build." --prerelease
+          gh release create "v${APP_VERSION}-win" "$msi" Cinebox-Windows-x64-portable.zip --title "Windows build ${GITHUB_RUN_NUMBER}" --notes "Unsigned build." --prerelease
