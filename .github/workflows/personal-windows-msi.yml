@@ -82,4 +82,4 @@ jobs:
           msi="$(find composeApp/build -name "Cinebox-Windows-*.msi" | head -n 1)"
           test -f "$msi"
           ls -lh "$msi"
-          gh release create "v${APP_VERSION}-win" "$msi" Cinebox-Windows-x64-portable.zip --title "Windows build ${GITHUB_RUN_NUMBER}" --notes "Unsigned build." --prerelease
+          gh release create "v${APP_VERSION}" "$msi" Cinebox-Windows-x64-portable.zip --title "Windows build ${GITHUB_RUN_NUMBER}" --notes "Unsigned build." --prerelease
