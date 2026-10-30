@@ -47,6 +47,7 @@ jobs:
             echo "NUVIO_SUPABASE_URL=https://destinyab.go.ro:8444"
             echo "NUVIO_SUPABASE_ANON_KEY=${key}"
             echo "NUVIO_SUPABASE_FALLBACK_URL="
+            echo "NUVIO_DISCORD_CLIENT_ID=1565830214301253632"
           } > local.properties
 
       - name: Install WebView2 SDK
