@@ -406,6 +406,12 @@ fun jpackageCompatibleVersion(version: String): String {
         numbers += 0
     }
     numbers[0] = numbers[0].coerceAtLeast(1)
+    // Windows Installer only upgrades when ProductVersion increases, and it ignores the "-alpha.NNNN"
+    // suffix. Fold the build number into the third component (max 65535) so every build is newer.
+    val buildNumber = Regex("-alpha\\.(\\d+)").find(version)?.groupValues?.get(1)?.toIntOrNull()
+    if (buildNumber != null) {
+        numbers[2] = (numbers[2] * 1000 + buildNumber).coerceAtMost(65535)
+    }
     return numbers.joinToString(".")
 }
 
