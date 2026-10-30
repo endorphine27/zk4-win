@@ -20,6 +20,7 @@ import androidx.compose.ui.window.application
 import androidx.compose.ui.window.rememberWindowState
 import androidx.compose.ui.unit.dp
 import com.nuvio.app.core.deeplink.handleAppUrl
+import com.nuvio.app.core.diagnostics.DesktopFileLog
 import com.nuvio.app.core.diagnostics.SentryInitializer
 import com.nuvio.app.core.ui.NuvioTheme
 import com.nuvio.app.core.ui.ProvideDesktopWindowInsets
@@ -57,6 +58,7 @@ fun main(args: Array<String>) {
     if (System.getProperty("os.name", "").lowercase().contains("linux")) {
         runCatching { NativePlayerBridge.initGtkEarly() }
     }
+    DesktopFileLog.start()
     applyDesktopRendererPreference()
     SentryInitializer.start()
     configureDesktopQuickJsLibrary()
