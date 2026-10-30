@@ -158,28 +158,24 @@ internal fun MainTabsDestination(
                 drawable = Res.drawable.sidebar_search,
                 label = stringResource(Res.string.compose_nav_search),
             ),
-            *(if (isDesktop) arrayOf(
-                FloatingNavigationItem(
-                    selected = selectedTab == AppScreenTab.Tv,
-                    onClick = { onTabSelected(AppScreenTab.Tv) },
-                    drawable = Res.drawable.sidebar_tv,
-                    label = stringResource(Res.string.compose_nav_tv),
-                ),
-            ) else emptyArray<FloatingNavigationItem>()),
+            FloatingNavigationItem(
+                selected = selectedTab == AppScreenTab.Tv,
+                onClick = { onTabSelected(AppScreenTab.Tv) },
+                drawable = Res.drawable.sidebar_tv,
+                label = stringResource(Res.string.compose_nav_tv),
+            ),
             FloatingNavigationItem(
                 selected = selectedTab == AppScreenTab.Library,
                 onClick = { onTabSelected(AppScreenTab.Library) },
                 drawable = Res.drawable.sidebar_library,
                 label = stringResource(Res.string.compose_nav_library),
             ),
-            *(if (isDesktop) arrayOf(
-                FloatingNavigationItem(
-                    selected = selectedTab == AppScreenTab.Calendar,
-                    onClick = { onTabSelected(AppScreenTab.Calendar) },
-                    icon = Icons.Filled.DateRange,
-                    label = stringResource(Res.string.compose_nav_calendar),
-                ),
-            ) else emptyArray<FloatingNavigationItem>()),
+            FloatingNavigationItem(
+                selected = selectedTab == AppScreenTab.Calendar,
+                onClick = { onTabSelected(AppScreenTab.Calendar) },
+                icon = Icons.Filled.DateRange,
+                label = stringResource(Res.string.compose_nav_calendar),
+            ),
             FloatingNavigationItem(
                 selected = selectedTab == AppScreenTab.Settings,
                 onClick = { onTabSelected(AppScreenTab.Settings) },
