@@ -261,7 +261,7 @@ object AvatarRepository {
 
     private fun publishCatalog() {
         _avatars.value = availableAvatarCatalog(
-            standardCatalog = standardCatalog,
+            standardCatalog = BuiltInAvatars + standardCatalog.filter { remote -> BuiltInAvatars.none { it.id == remote.id } },
             memberCatalog = memberCatalog,
             hasMemberAccess = hasMemberAccess,
         )
