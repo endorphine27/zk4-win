@@ -44,10 +44,10 @@ jobs:
           key="$(curl -fsS https://destinyab.go.ro:8444/.well-known/nuvio | jq -r .publishable_key)"
           test -n "$key" && test "$key" != null
           {
-            echo "NUVIO_SUPABASE_URL=https://destinyab.go.ro:8444"
-            echo "NUVIO_SUPABASE_ANON_KEY=${key}"
-            echo "NUVIO_SUPABASE_FALLBACK_URL="
-            echo "NUVIO_DISCORD_CLIENT_ID=1565830214301253632"
+            echo "CINEBOX_SUPABASE_URL=https://destinyab.go.ro:8444"
+            echo "CINEBOX_SUPABASE_ANON_KEY=${key}"
+            echo "CINEBOX_SUPABASE_FALLBACK_URL="
+            echo "CINEBOX_DISCORD_CLIENT_ID=1565830214301253632"
           } > local.properties
 
       - name: Install WebView2 SDK
@@ -69,8 +69,8 @@ jobs:
         shell: pwsh
         run: |
           & .\gradlew.bat :composeApp:createReleaseDistributable :composeApp:packageReleaseMsi `
-            "-Pnuvio.webview2.dir=$env:WEBVIEW2_ROOT" `
-            "-Pnuvio.desktop.versionName=$env:APP_VERSION" `
+            "-Pcinebox.webview2.dir=$env:WEBVIEW2_ROOT" `
+            "-Pcinebox.desktop.versionName=$env:APP_VERSION" `
             "-Pcompose.desktop.packaging.checkJdkVendor=false" `
             --no-configuration-cache --no-daemon --stacktrace
 

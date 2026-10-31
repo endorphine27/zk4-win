@@ -42,8 +42,8 @@
 # P2P runtime and Cinebox Engine JNI bridge. Native libraries are not processed
 # by R8, but their Kotlin/JNI wrapper classes and method names must stay stable.
 -keep class com.cinebox.app.features.p2p.** { *; }
--keep class com.nuvio.engine.** { *; }
--keep interface com.nuvio.engine.** { *; }
+-keep class com.cinebox.engine.** { *; }
+-keep interface com.cinebox.engine.** { *; }
 
 -keep class androidx.work.impl.WorkDatabase_Impl { *; }
 
