@@ -41,9 +41,19 @@ jobs:
 
       - uses: gradle/actions/setup-gradle@v6
 
-      # Empty on purpose: official keys (Supabase, Trakt, MDBList, Sentry) are not available here
-      - name: Create empty local.properties
-        run: touch local.properties
+      # Own CINEBOX server. The public client key is read from the server's discovery document;
+      # Trakt, MDBList and Sentry keys stay empty.
+      - name: Create local.properties
+        shell: bash
+        run: |
+          key="$(curl -fsS https://destinyab.go.ro:8444/.well-known/nuvio | jq -r .publishable_key)"
+          test -n "$key" && test "$key" != null
+          {
+            echo "NUVIO_SUPABASE_URL=https://destinyab.go.ro:8444"
+            echo "NUVIO_SUPABASE_ANON_KEY=${key}"
+            echo "NUVIO_SUPABASE_FALLBACK_URL="
+            echo "NUVIO_DISCORD_CLIENT_ID=1565830214301253632"
+          } > local.properties
 
       # Every build gets an increasing, zero-padded version (0.1.33-alpha.0030) so the in-app updater
       # and GitHub's release ordering both agree on which one is the newest.
