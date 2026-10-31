@@ -16,18 +16,16 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      # Native Windows runtime (libmpv-2.dll) lives in Git LFS on the upstream repo only
-      - name: Fetch Windows runtime from upstream LFS
+      # Native Windows runtime (libmpv-2.dll), kept as a release asset in zk4-deps
+      - name: Fetch Windows runtime
         shell: bash
         run: |
-          git lfs install --local
-          git config lfs.url https://github.com/NuvioMedia/NuvioDesktop.git/info/lfs
-          git lfs pull --include="composeApp/src/desktopMain/native/windows/runtime/**" --exclude=""
           runtime_path="composeApp/src/desktopMain/native/windows/runtime/libmpv-2.dll"
-          test -f "${runtime_path}"
+          curl --fail --location --retry 5 --silent --show-error -o "${runtime_path}" \
+            "https://github.com/endorphine27/zk4-deps/releases/download/runtime-v1/libmpv-2.dll"
           size="$(wc -c < "${runtime_path}")"
           echo "libmpv-2.dll: ${size} bytes"
-          (( size > 1000000 )) || { echo "LFS runtime not downloaded" >&2; exit 1; }
+          (( size > 1000000 )) || { echo "runtime not downloaded" >&2; exit 1; }
 
       - uses: actions/setup-java@v5
         with:
