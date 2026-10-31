@@ -26,7 +26,7 @@ internal object CineboxExoPlayerPerformanceHelper {
             val active = value && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O
             field = active
             if (active) {
-                NuvioEngineConfig.set(NuvioEngineConfig.cineboxMode())
+                NuvioEngineConfig.set(NuvioEngineConfig.nuvioMode())
             } else {
                 NuvioEngineConfig.set(NuvioEngineConfig.stockMode())
             }
