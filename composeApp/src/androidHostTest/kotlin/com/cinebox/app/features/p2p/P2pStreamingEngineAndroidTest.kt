@@ -1,7 +1,7 @@
 package com.cinebox.app.features.p2p
 
-import com.cinebox.engine.NuvioUploadMode
-import com.cinebox.engine.NuvioTorrentProfile
+import com.nuvio.engine.NuvioUploadMode
+import com.nuvio.engine.NuvioTorrentProfile
 import java.io.File
 import java.nio.file.Files
 import kotlin.test.Test

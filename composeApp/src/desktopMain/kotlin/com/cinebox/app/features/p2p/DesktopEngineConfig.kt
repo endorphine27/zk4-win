@@ -1,8 +1,8 @@
 package com.cinebox.app.features.p2p
 
-import com.cinebox.engine.NuvioEngineConfig
-import com.cinebox.engine.NuvioTorrentProfile
-import com.cinebox.engine.NuvioUploadMode
+import com.nuvio.engine.NuvioEngineConfig
+import com.nuvio.engine.NuvioTorrentProfile
+import com.nuvio.engine.NuvioUploadMode
 import java.io.File
 
 internal fun buildNuvioEngineConfig(
