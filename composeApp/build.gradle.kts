@@ -1311,6 +1311,7 @@ compose.desktop {
                                 <string>com.nuvio.media.desktop</string>
                                 <key>CFBundleURLSchemes</key>
                                 <array>
+                                    <string>cinebox</string>
                                     <string>nuvio</string>
                                     <string>stremio</string>
                                 </array>
