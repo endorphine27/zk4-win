@@ -278,9 +278,29 @@ private fun NativePlayerSurface(
     }
 
     LaunchedEffect(controller) {
+        var lastReported: PlayerPlaybackSnapshot? = null
+        var lastReportedAtNanos = 0L
         while (true) {
-            if (!controller.isReleasing) onSnapshot(controller.snapshot())
-            delay(250L)
+            var idle = false
+            if (!controller.isReleasing) {
+                val snapshot = controller.snapshot()
+                val nowNanos = System.nanoTime()
+                val previous = lastReported
+                // Every report recomposes the whole player screen and rebuilds its controls state, so only a
+                // changed position/buffer is held back to one report a second (the native controls read the
+                // position straight from the player). Any other change is reported on the next poll.
+                val onlyProgressChanged = previous != null &&
+                    snapshot.copy(positionMs = 0L, bufferedPositionMs = 0L) ==
+                    previous.copy(positionMs = 0L, bufferedPositionMs = 0L)
+                if (!onlyProgressChanged || nowNanos - lastReportedAtNanos >= ProgressReportIntervalNanos) {
+                    lastReported = snapshot
+                    lastReportedAtNanos = nowNanos
+                    onSnapshot(snapshot)
+                }
+                idle = !snapshot.isPlaying && !snapshot.isLoading
+            }
+            // Paused/ended: nothing moves on screen, so wake up less often to save CPU and battery.
+            delay(if (idle) 750L else 250L)
         }
     }
 
@@ -392,3 +412,5 @@ private class DesktopStubPlayerController : PlayerEngineController {
     override fun clearExternalSubtitle() = Unit
     override fun clearExternalSubtitleAndSelect(trackIndex: Int) = Unit
 }
+
+private const val ProgressReportIntervalNanos = 1_000_000_000L
