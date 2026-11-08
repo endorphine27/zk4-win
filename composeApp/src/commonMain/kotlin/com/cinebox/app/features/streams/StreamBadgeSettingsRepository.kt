@@ -6,6 +6,10 @@ import com.cinebox.app.core.i18n.localizedBadgeImportLimit
 import com.cinebox.app.core.i18n.localizedBadgeUrlSchemeInvalid
 import com.cinebox.app.features.addons.httpGetText
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,6 +41,9 @@ enum class StreamBadgePlacement {
     BOTTOM,
 }
 
+private const val DEFAULT_BADGE_PACK_URL =
+    "https://xperience-app.com/badges/2c130c8d-5eb3-428d-8584-4d639a822565.json"
+
 object StreamBadgeSettingsRepository {
     private val _uiState = MutableStateFlow(StreamBadgeSettingsUiState())
     val uiState: StateFlow<StreamBadgeSettingsUiState> = _uiState.asStateFlow()
@@ -46,6 +53,9 @@ object StreamBadgeSettingsRepository {
         ignoreUnknownKeys = true
         explicitNulls = false
     }
+
+    private val seedScope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    private var isSeedingDefaultBadges = false
 
     private var hasLoaded = false
     private var streamBadgeRules = StreamBadgeRules()
@@ -239,6 +249,24 @@ object StreamBadgeSettingsRepository {
             StreamBadgeSettingsStorage.clearLegacyDebridStreamBadgeRules()
         }
         publish()
+        // First run only: nothing was ever stored, so import the default pack. Once the user
+        // deletes it the stored value becomes "" (not null) and it is never re-imported.
+        if (storedRules == null && legacyRules == null && StreamBadgeSettingsStorage.loadStreamBadgeRules() == null) {
+            seedDefaultBadges()
+        }
+    }
+
+    private fun seedDefaultBadges() {
+        if (isSeedingDefaultBadges) return
+        isSeedingDefaultBadges = true
+        seedScope.launch {
+            try {
+                // A failure (offline) saves nothing, so the next load tries again.
+                importStreamBadgeRulesFromUrl(DEFAULT_BADGE_PACK_URL)
+            } finally {
+                isSeedingDefaultBadges = false
+            }
+        }
     }
 
     private fun publish() {
