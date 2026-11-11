@@ -763,6 +763,8 @@
     <string name="settings_homescreen_section_hero">HOME LAYOUT</string>
     <string name="settings_homescreen_section_hero_sources">HERO CATALOGS</string>
     <string name="settings_homescreen_selected_count">%1$d of %2$d selected</string>
+    <string name="settings_homescreen_hero_surprise">Surprise me</string>
+    <string name="settings_homescreen_hero_surprise_description">Any installed catalog, re-rolled each time Home loads.</string>
     <string name="settings_homescreen_show_hero">Show Hero Section</string>
     <string name="settings_homescreen_show_hero_description">Display hero carousel at top of home.</string>
     <string name="layout_hide_unreleased">Hide Unreleased Content</string>

@@ -1,5 +1,6 @@
 package com.cinebox.app.features.settings
 
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.clickable
@@ -58,6 +59,8 @@ import cinebox.composeapp.generated.resources.settings_homescreen_pin_to_move_to
 import cinebox.composeapp.generated.resources.settings_homescreen_section_catalogs
 import cinebox.composeapp.generated.resources.settings_homescreen_section_catalogs_collections
 import cinebox.composeapp.generated.resources.settings_homescreen_section_collections
+import cinebox.composeapp.generated.resources.settings_homescreen_hero_surprise
+import cinebox.composeapp.generated.resources.settings_homescreen_hero_surprise_description
 import cinebox.composeapp.generated.resources.settings_homescreen_section_hero
 import cinebox.composeapp.generated.resources.settings_homescreen_section_hero_sources
 import cinebox.composeapp.generated.resources.settings_homescreen_selected_count
@@ -90,6 +93,7 @@ internal fun LazyListScope.homescreenSettingsContent(
         )
     }
     item {
+        val heroSurprise = HomeCatalogSettingsRepository.uiState.collectAsStateWithLifecycle().value.heroSurprise
         SettingsSection(
             title = stringResource(Res.string.settings_homescreen_section_hero),
             isTablet = isTablet,
@@ -102,6 +106,16 @@ internal fun LazyListScope.homescreenSettingsContent(
                     isTablet = isTablet,
                     onCheckedChange = HomeCatalogSettingsRepository::setHeroEnabled,
                 )
+                if (heroEnabled) {
+                    SettingsGroupDivider(isTablet = isTablet)
+                    SettingsSwitchRow(
+                        title = stringResource(Res.string.settings_homescreen_hero_surprise),
+                        description = stringResource(Res.string.settings_homescreen_hero_surprise_description),
+                        checked = heroSurprise,
+                        isTablet = isTablet,
+                        onCheckedChange = HomeCatalogSettingsRepository::setHeroSurprise,
+                    )
+                }
                 SettingsGroupDivider(isTablet = isTablet)
                 SettingsSwitchRow(
                     title = stringResource(Res.string.layout_catalog_type),
@@ -122,8 +136,9 @@ internal fun LazyListScope.homescreenSettingsContent(
         }
     }
     item {
+        val heroSurprise = HomeCatalogSettingsRepository.uiState.collectAsStateWithLifecycle().value.heroSurprise
         val catalogOnlyItems = items.filter { !it.isCollection }
-        if (heroEnabled && catalogOnlyItems.isNotEmpty()) {
+        if (heroEnabled && !heroSurprise && catalogOnlyItems.isNotEmpty()) {
             var heroSourcesExpanded by remember { mutableStateOf(false) }
             SettingsSection(
                 title = stringResource(Res.string.settings_homescreen_section_hero_sources),

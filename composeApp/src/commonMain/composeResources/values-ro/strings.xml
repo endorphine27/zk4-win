@@ -600,6 +600,8 @@
     <string name="settings_homescreen_section_hero">ASPECT ECRAN PRINCIPAL</string>
     <string name="settings_homescreen_section_hero_sources">CATALOAGE SECȚIUNE PRINCIPALĂ (HERO)</string>
     <string name="settings_homescreen_selected_count">%1$d din %2$d selectate</string>
+    <string name="settings_homescreen_hero_surprise">Surprinde-mă</string>
+    <string name="settings_homescreen_hero_surprise_description">Orice catalog instalat, ales din nou la fiecare încărcare a ecranului principal.</string>
     <string name="settings_homescreen_show_hero">Afișează secțiunea principală (Hero)</string>
     <string name="settings_homescreen_show_hero_description">Afișează un carusel în partea de sus a ecranului principal.</string>
     <string name="layout_hide_unreleased">Ascunde conținutul nelansat</string>
