@@ -42,6 +42,7 @@ data class HomeCatalogSettingsItem(
 
 data class HomeCatalogSettingsUiState(
     val heroEnabled: Boolean = true,
+    val heroSurprise: Boolean = false,
     val showCatalogType: Boolean = true,
     val hideUnreleasedContent: Boolean = false,
     val items: List<HomeCatalogSettingsItem> = emptyList(),
@@ -49,6 +50,8 @@ data class HomeCatalogSettingsUiState(
     val signature: String
         get() = buildString {
             append(heroEnabled)
+            append('|')
+            append(heroSurprise)
             append('|')
             append(showCatalogType)
             append('|')
@@ -71,6 +74,7 @@ internal data class HomeCatalogPreference(
 
 internal data class HomeCatalogSettingsSnapshot(
     val heroEnabled: Boolean,
+    val heroSurprise: Boolean,
     val showCatalogType: Boolean,
     val hideUnreleasedContent: Boolean,
     val preferences: Map<String, HomeCatalogPreference>,
@@ -88,6 +92,7 @@ private data class StoredHomeCatalogPreference(
 @Serializable
 private data class StoredHomeCatalogSettingsPayload(
     val heroEnabled: Boolean = true,
+    val heroSurprise: Boolean = false,
     val showCatalogType: Boolean = true,
     val hideUnreleasedContent: Boolean = false,
     val items: List<StoredHomeCatalogPreference> = emptyList(),
@@ -106,6 +111,7 @@ object HomeCatalogSettingsRepository {
 
     private val emptySnapshot = HomeCatalogSettingsSnapshot(
         heroEnabled = true,
+        heroSurprise = false,
         showCatalogType = true,
         hideUnreleasedContent = false,
         preferences = emptyMap(),
@@ -125,6 +131,7 @@ object HomeCatalogSettingsRepository {
             preferencesRef.value = value
         }
     private var heroEnabled = true
+    private var heroSurprise = false
     private var showCatalogType = true
     private var hideUnreleasedContent = false
 
@@ -132,6 +139,7 @@ object HomeCatalogSettingsRepository {
         hasLoaded = false
         preferences = emptyMap()
         heroEnabled = true
+        heroSurprise = false
         showCatalogType = true
         hideUnreleasedContent = false
         definitions = emptyList()
@@ -151,6 +159,7 @@ object HomeCatalogSettingsRepository {
         lastCollectionSync = null
         preferences = emptyMap()
         heroEnabled = true
+        heroSurprise = false
         showCatalogType = true
         hideUnreleasedContent = false
         snapshotRef.value = emptySnapshot
@@ -228,6 +237,15 @@ object HomeCatalogSettingsRepository {
         HomeRepository.applyCurrentSettings()
     }
 
+    fun setHeroSurprise(enabled: Boolean) {
+        ensureLoaded()
+        if (heroSurprise == enabled) return
+        heroSurprise = enabled
+        publish()
+        persist()
+        HomeRepository.applyCurrentSettings()
+    }
+
     fun setShowCatalogType(enabled: Boolean) {
         ensureLoaded()
         if (showCatalogType == enabled) return
@@ -275,6 +293,7 @@ object HomeCatalogSettingsRepository {
     fun resetToDefaults() {
         ensureLoaded()
         heroEnabled = true
+        heroSurprise = false
         showCatalogType = true
         hideUnreleasedContent = false
         preferences = emptyMap()
@@ -327,6 +346,7 @@ object HomeCatalogSettingsRepository {
         if (parsedPayload != null) {
             lastPersistedPayload = payload
             heroEnabled = parsedPayload.heroEnabled
+            heroSurprise = parsedPayload.heroSurprise
             showCatalogType = parsedPayload.showCatalogType
             hideUnreleasedContent = parsedPayload.hideUnreleasedContent
             preferences = parsedPayload.items.associateBy { it.key }
@@ -393,6 +413,7 @@ object HomeCatalogSettingsRepository {
     private fun publish() {
         snapshotRef.value = HomeCatalogSettingsSnapshot(
             heroEnabled = heroEnabled,
+            heroSurprise = heroSurprise,
             showCatalogType = showCatalogType,
             hideUnreleasedContent = hideUnreleasedContent,
             preferences = preferences.mapValues { (_, value) ->
@@ -439,6 +460,7 @@ object HomeCatalogSettingsRepository {
 
         val nextState = HomeCatalogSettingsUiState(
             heroEnabled = heroEnabled,
+            heroSurprise = heroSurprise,
             showCatalogType = showCatalogType,
             hideUnreleasedContent = hideUnreleasedContent,
             items = items,
@@ -450,6 +472,7 @@ object HomeCatalogSettingsRepository {
         val payload = json.encodeToString(
             StoredHomeCatalogSettingsPayload(
                 heroEnabled = heroEnabled,
+                heroSurprise = heroSurprise,
                 showCatalogType = showCatalogType,
                 hideUnreleasedContent = hideUnreleasedContent,
                 items = preferences.values.sortedBy { it.order },
